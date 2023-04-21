@@ -36,7 +36,25 @@ if __name__ == "__main__":
                     print(f"Invalid get command '{prompt}'.")
 
                 value = app.get_value(args[0])
-                print(f"get {args[0]}: {value}")
+                print(f"get {args[0]}: {value or 'nil'}")
+
+            elif prompt.startswith("write "):
+                args = prompt[6:].split(" ")
+
+                if len(prompt[6:].split(" ")) != 1:
+                    print(f"Invalid write command '{prompt}'.")
+
+                app.write_file(args[0])
+                print(f"wrote to {args[0]}")
+
+            elif prompt.startswith("read "):
+                args = prompt[5:].split(" ")
+
+                if len(prompt[5:].split(" ")) != 1:
+                    print(f"Invalid read command '{prompt}'.")
+
+                app.read_file(args[0])
+                print(f"read from {args[0]}")
 
             else:
                 print(f"Invalid command '{prompt}'.")
