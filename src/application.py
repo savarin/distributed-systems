@@ -2,6 +2,7 @@ from typing import Dict, Optional
 import dataclasses
 
 import helpers
+import message
 
 
 @dataclasses.dataclass
@@ -26,3 +27,20 @@ class Application:
 
     def get_value(self, key: str) -> Optional[str]:
         return self.dictionary.get(key, None)
+
+    def handle_message(self, msg: message.Message) -> message.Message:
+        args = msg.text.split(" ")
+
+        if args[0] == "set":
+            assert len(args) == 3
+            self.set_value(args[1], args[2])
+
+            return message.Message(msg.target, msg.source, "OK")
+
+        elif args[0] == "get":
+            assert len(args) == 2
+            value = self.get_value(args[1]) or "nil"
+
+            return message.Message(msg.target, msg.source, value)
+
+        return message.Message(msg.target, msg.source, "error")
