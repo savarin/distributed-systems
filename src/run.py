@@ -1,5 +1,6 @@
-import signal
 import sys
+
+import application
 
 
 def handler(sig, frame):
@@ -8,6 +9,7 @@ def handler(sig, frame):
 
 
 if __name__ == "__main__":
+    app = application.Application()
     identifier = 0
 
     try:
@@ -17,7 +19,27 @@ if __name__ == "__main__":
             if prompt in {"", "exit"}:
                 break
 
-            print(prompt)
+            elif prompt.startswith("set "):
+                args = prompt[4:].split(" ")
+
+                if len(args) != 2:
+                    print(f"Invalid set command '{prompt}'.")
+                    continue
+
+                app.set_value(args[0], args[1])
+                print(f"set {args[0]}: {args[1]}")
+
+            elif prompt.startswith("get "):
+                args = prompt[4:].split(" ")
+
+                if len(prompt[4:].split(" ")) != 1:
+                    print(f"Invalid get command '{prompt}'.")
+
+                value = app.get_value(args[0])
+                print(f"get {args[0]}: {value}")
+
+            else:
+                print(f"Invalid command '{prompt}'.")
 
     except KeyboardInterrupt:
         print("\nExit on SIGINT.")
